@@ -14,10 +14,6 @@ import java.io.File;
 
 /**
  * 在项目启动时安装证书
- *
- * @author zifangsky
- * @date 2018/4/24
- * @since 1.0.0
  */
 @Slf4j
 @Component
@@ -31,14 +27,6 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
         //root application context 没有parent
         ApplicationContext context = event.getApplicationContext().getParent();
         if(context == null){
-            // 测试 获取文件路 ok
-//            //licensePath = LicenseCheckListener.class.getClassLoader().getResource("license.lic").getPath();;
-//            URL resource = LicenseCheckListener.class.getClassLoader().getResource("license.dat");
-//            if(null != resource) {
-//                licensePath = resource.getPath();
-//            } else {
-//                log.error("请先添加授权证书");
-//            }
             String licensePath = licenseConfig.getLicensePath();
             File license = new File(licensePath);
             if(license.exists()){

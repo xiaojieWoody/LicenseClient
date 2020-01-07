@@ -1,6 +1,5 @@
 package com.mylicense.controller;
 
-import com.mylicense.common.CommonConstant;
 import com.mylicense.common.ResMsg;
 import com.mylicense.service.ILicenseService;
 import org.springframework.beans.factory.annotation.Autowired;

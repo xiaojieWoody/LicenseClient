@@ -1,7 +1,6 @@
 package com.mylicense.config;
 
 import com.mylicense.license.CustomLicenseManager;
-import com.mylicense.license.model.LicenseCheckModel;
 import de.schlichtherle.license.LicenseManager;
 import de.schlichtherle.license.LicenseParam;
 

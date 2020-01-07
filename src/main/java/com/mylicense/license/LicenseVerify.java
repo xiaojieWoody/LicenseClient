@@ -20,8 +20,6 @@ public class LicenseVerify {
 
     /**
      * 安装License证书
-     * @param param
-     * @return
      */
     public synchronized LicenseContent install(LicenseVerifyParam param) {
         LicenseContent result = null;
@@ -41,10 +39,6 @@ public class LicenseVerify {
 
     /**
      * 校验License证书
-     * @author zifangsky
-     * @date 2018/4/20 16:26
-     * @since 1.0.0
-     * @return boolean
      */
     public boolean verify(){
         // 单例模式，应用启动安装证书时已经初始化过

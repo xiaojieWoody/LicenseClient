@@ -41,13 +41,13 @@ public class CustomLicenseManager extends LicenseManager {
      * @return
      * @throws Exception
      */
-    @Override
-    protected synchronized byte[] create(LicenseContent content, LicenseNotary notary) throws Exception {
-        initialize(content);
-        this.validateCreate(content);
-        final GenericCertificate certificate = notary.sign(content);
-        return getPrivacyGuard().cert2key(certificate);
-    }
+//    @Override
+//    protected synchronized byte[] create(LicenseContent content, LicenseNotary notary) throws Exception {
+//        initialize(content);
+//        this.validateCreate(content);
+//        final GenericCertificate certificate = notary.sign(content);
+//        return getPrivacyGuard().cert2key(certificate);
+//    }
 
     /**
      * 重写install方法
@@ -184,22 +184,22 @@ public class CustomLicenseManager extends LicenseManager {
      * @param content
      * @throws LicenseContentException
      */
-    protected synchronized void validateCreate(final LicenseContent content) throws LicenseContentException {
-        final LicenseParam param = getLicenseParam();
-        final Date now = new Date();
-        final Date notBefore = content.getNotBefore();
-        final Date notAfter = content.getNotAfter();
-        if (null != notAfter && now.after(notAfter)){
-            throw new LicenseContentException("证书失效时间不能早于当前时间");
-        }
-        if (null != notBefore && null != notAfter && notAfter.before(notBefore)){
-            throw new LicenseContentException("证书生效时间不能晚于证书失效时间");
-        }
-        final String consumerType = content.getConsumerType();
-        if (null == consumerType){
-            throw new LicenseContentException("用户类型不能为空");
-        }
-    }
+//    protected synchronized void validateCreate(final LicenseContent content) throws LicenseContentException {
+//        final LicenseParam param = getLicenseParam();
+//        final Date now = new Date();
+//        final Date notBefore = content.getNotBefore();
+//        final Date notAfter = content.getNotAfter();
+//        if (null != notAfter && now.after(notAfter)){
+//            throw new LicenseContentException("证书失效时间不能早于当前时间");
+//        }
+//        if (null != notBefore && null != notAfter && notAfter.before(notBefore)){
+//            throw new LicenseContentException("证书生效时间不能晚于证书失效时间");
+//        }
+//        final String consumerType = content.getConsumerType();
+//        if (null == consumerType){
+//            throw new LicenseContentException("用户类型不能为空");
+//        }
+//    }
 
     /**
      * 校验当前服务器的IP/Mac地址是否在可被允许的IP范围内

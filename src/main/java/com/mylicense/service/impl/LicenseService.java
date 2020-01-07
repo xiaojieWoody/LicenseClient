@@ -56,21 +56,11 @@ public class LicenseService implements ILicenseService {
         String filename = file.getOriginalFilename();
         log.info("filename-{}", filename);
 
-        //String path = LicenseCheckListener.class.getClassLoader().getResource("").getPath();
-        //String path = ResourceUtils.getURL("classpath:").getPath();
-
         FileOutputStream out = new FileOutputStream(licenseConfig.getLicensePath());
         out.write(file.getBytes());
         out.flush();
         out.close();
 
-//        URL resource = LicenseCheckListener.class.getClassLoader().getResource("license.dat");
-//        if(null != resource) {
-//            licensePath = resource.getPath();
-//        } else {
-//            log.error("请先添加授权证书");
-//            throw new RuntimeException("请先添加授权证书");
-//        }
         // 重新安装证书
         log.info("++++++++ 开始安装证书 ++++++++");
 
