@@ -47,6 +47,7 @@ public class LicenseVerify {
      * @return boolean
      */
     public boolean verify(){
+        // 单例模式，应用启动安装证书时已经初始化过
         LicenseManager licenseManager = LicenseManagerHolder.getInstance(null);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //校验证书

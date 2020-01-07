@@ -2,7 +2,7 @@ package com.mylicense.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.mylicense.common.ResMsg;
-import com.mylicense.license.LicenseCheckListener;
+import com.mylicense.config.LicenseConfig;
 import com.mylicense.license.LicenseVerify;
 import com.mylicense.license.machine.AbstractMachineInfo;
 import com.mylicense.license.machine.LinuxMachineInfo;
@@ -11,49 +11,21 @@ import com.mylicense.license.model.LicenseCheckModel;
 import com.mylicense.license.param.LicenseVerifyParam;
 import com.mylicense.service.ILicenseService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 
 @Slf4j
 @Service
 public class LicenseService implements ILicenseService {
 
-    /**
-     * 证书subject
-     */
-    @Value("${license.subject}")
-    private String subject;
-
-    /**
-     * 公钥别称
-     */
-    @Value("${license.publicAlias}")
-    private String publicAlias;
-
-    /**
-     * 访问公钥库的密码
-     */
-    @Value("${license.storePass}")
-    private String storePass;
-
-    /**
-     * 证书生成路径
-     */
-    @Value("${license.licensePath}")
-    private String licensePath;
-
-    /**
-     * 密钥库存储路径
-     */
-    @Value("${license.publicKeysStorePath}")
-    private String publicKeysStorePath;
+    @Autowired
+    private LicenseConfig licenseConfig;
 
     /**
      * 获取服务器硬件信息
@@ -85,29 +57,25 @@ public class LicenseService implements ILicenseService {
         log.info("filename-{}", filename);
 
         //String path = LicenseCheckListener.class.getClassLoader().getResource("").getPath();
-        String path = ResourceUtils.getURL("classpath:").getPath();
+        //String path = ResourceUtils.getURL("classpath:").getPath();
 
-        FileOutputStream out = new FileOutputStream(path + filename);
+        FileOutputStream out = new FileOutputStream(licenseConfig.getLicensePath());
         out.write(file.getBytes());
         out.flush();
         out.close();
 
-        URL resource = LicenseCheckListener.class.getClassLoader().getResource("license.dat");
-        if(null != resource) {
-            licensePath = resource.getPath();
-        } else {
-            log.error("请先添加授权证书");
-            throw new RuntimeException("请先添加授权证书");
-        }
+//        URL resource = LicenseCheckListener.class.getClassLoader().getResource("license.dat");
+//        if(null != resource) {
+//            licensePath = resource.getPath();
+//        } else {
+//            log.error("请先添加授权证书");
+//            throw new RuntimeException("请先添加授权证书");
+//        }
         // 重新安装证书
         log.info("++++++++ 开始安装证书 ++++++++");
 
         LicenseVerifyParam param = new LicenseVerifyParam();
-        param.setSubject(subject);
-        param.setPublicAlias(publicAlias);
-        param.setStorePass(storePass);
-        param.setLicensePath(licensePath);
-        param.setPublicKeysStorePath(publicKeysStorePath);
+        BeanUtils.copyProperties(licenseConfig, param);
 
         LicenseVerify licenseVerify = new LicenseVerify();
         //安装证书

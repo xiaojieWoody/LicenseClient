@@ -16,8 +16,21 @@ public class LicenseCheckInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         LicenseVerify licenseVerify = new LicenseVerify();
-        //校验证书是否有效
-        boolean verifyResult = licenseVerify.verify();
+
+        boolean verifyResult = false;
+        try {
+            //校验证书是否有效
+            verifyResult = licenseVerify.verify();
+        } catch (Exception e) {
+            log.error("验证证书异常，没安装证书或证书失效...",e);
+            response.setCharacterEncoding("utf-8");
+            Map<String,String> result = new HashMap<>(1);
+            result.put("result","您的证书无效，请核查服务器是否取得授权或重新申请证书！");
+
+            response.getWriter().write(JSON.toJSONString(result));
+
+            return false;
+        }
         if(verifyResult){
             return true;
         }else{
