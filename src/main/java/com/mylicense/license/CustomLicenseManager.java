@@ -62,7 +62,8 @@ public class CustomLicenseManager extends LicenseManager {
     protected synchronized LicenseContent install(final byte[] key, final LicenseNotary notary) throws Exception {
         final GenericCertificate certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
-        final LicenseContent content = (LicenseContent)this.load(certificate.getEncoded());
+//        final LicenseContent content = (LicenseContent)this.load(certificate.getEncoded());
+        final LicenseContent content = (LicenseContent) certificate.getContent();
         this.validate(content);
         setLicenseKey(key);
         setCertificate(certificate);
@@ -86,7 +87,8 @@ public class CustomLicenseManager extends LicenseManager {
         }
         certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
-        final LicenseContent content = (LicenseContent)this.load(certificate.getEncoded());
+//        final LicenseContent content = (LicenseContent)this.load(certificate.getEncoded());
+        final LicenseContent content = (LicenseContent) certificate.getContent();
         this.validate(content);
         setCertificate(certificate);
         return content;
