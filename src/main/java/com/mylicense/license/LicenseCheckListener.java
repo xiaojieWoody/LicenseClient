@@ -22,6 +22,9 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
     @Autowired
     private LicenseConfig licenseConfig;
 
+    @Autowired
+    private LicenseVerify licenseVerify;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         //root application context 没有parent
@@ -34,7 +37,7 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
                 LicenseVerifyParam param = new LicenseVerifyParam();
                 BeanUtils.copyProperties(licenseConfig, param);
 
-                LicenseVerify licenseVerify = new LicenseVerify();
+//                LicenseVerify licenseVerify = new LicenseVerify();
                 //安装证书
                 licenseVerify.install(param);
 

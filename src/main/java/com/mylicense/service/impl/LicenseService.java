@@ -27,6 +27,9 @@ public class LicenseService implements ILicenseService {
     @Autowired
     private LicenseConfig licenseConfig;
 
+    @Autowired
+    private LicenseVerify licenseVerify;
+
     /**
      * 获取服务器硬件信息
      * @return
@@ -67,7 +70,7 @@ public class LicenseService implements ILicenseService {
         LicenseVerifyParam param = new LicenseVerifyParam();
         BeanUtils.copyProperties(licenseConfig, param);
 
-        LicenseVerify licenseVerify = new LicenseVerify();
+//        LicenseVerify licenseVerify = new LicenseVerify();
         //安装证书
         licenseVerify.install(param);
 

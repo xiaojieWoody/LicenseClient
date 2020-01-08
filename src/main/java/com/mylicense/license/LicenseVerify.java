@@ -5,6 +5,7 @@ import com.mylicense.license.param.CustomKeyStoreParam;
 import com.mylicense.license.param.LicenseVerifyParam;
 import de.schlichtherle.license.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -16,6 +17,7 @@ import java.util.prefs.Preferences;
  * License校验
  */
 @Slf4j
+@Component
 public class LicenseVerify {
 
     /**
