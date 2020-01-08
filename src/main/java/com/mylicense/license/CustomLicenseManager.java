@@ -103,6 +103,8 @@ public class CustomLicenseManager extends LicenseManager {
         super.validate(content);
         //校验自定义的License参数
         LicenseCheckModel expectedCheckModel = (LicenseCheckModel) content.getExtra();
+        // 统计使用量
+        System.out.println("限制访问量------------"+ expectedCheckModel.getTotalCount() + "---------");
         //客户服务器真实的参数信息（解密参数中获取）
         LicenseCheckModel licenseCheckModel = getServerInfos();
 
