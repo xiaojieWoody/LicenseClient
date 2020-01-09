@@ -3,6 +3,7 @@ package com.mylicense.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.mylicense.common.ResMsg;
 import com.mylicense.config.LicenseConfig;
+import com.mylicense.license.LicenseCheckListener;
 import com.mylicense.license.LicenseVerify;
 import com.mylicense.license.machine.AbstractMachineInfo;
 import com.mylicense.license.machine.LinuxMachineInfo;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Base64;
 
 @Slf4j
@@ -70,7 +72,14 @@ public class LicenseService implements ILicenseService {
         LicenseVerifyParam param = new LicenseVerifyParam();
         BeanUtils.copyProperties(licenseConfig, param);
 
-//        LicenseVerify licenseVerify = new LicenseVerify();
+        URL publickeyResource = LicenseCheckListener.class.getClassLoader().getResource(licenseConfig.getPublicKeysStorePath());
+        if(publickeyResource != null) {
+            param.setPublicKeysStorePath(publickeyResource.getPath());
+        } else {
+            log.error("请先添加授权公钥！");
+            throw new RuntimeException("请先添加授权公钥！");
+        }
+
         //安装证书
         licenseVerify.install(param);
 
