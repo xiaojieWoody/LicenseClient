@@ -11,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.net.URL;
 
 /**
  * 在项目启动时安装证书
@@ -37,7 +38,14 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
                 LicenseVerifyParam param = new LicenseVerifyParam();
                 BeanUtils.copyProperties(licenseConfig, param);
 
-//                LicenseVerify licenseVerify = new LicenseVerify();
+                URL publickeyResource = LicenseCheckListener.class.getClassLoader().getResource(licenseConfig.getPublicKeysStorePath());
+                if(publickeyResource != null) {
+                    param.setPublicKeysStorePath(publickeyResource.getPath());
+                } else {
+                    log.error("请先添加授权公钥！");
+                    throw new RuntimeException("请先添加授权公钥！");
+                }
+
                 //安装证书
                 licenseVerify.install(param);
 
