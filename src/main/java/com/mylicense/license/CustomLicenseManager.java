@@ -73,10 +73,15 @@ public class CustomLicenseManager extends LicenseManager {
 
         // License证书
         LicenseConfig licenseConfig = SpringContextUtils.getBeanByClass(LicenseConfig.class);
-        byte[] key = FileUtils.readFileToByteArray(new File(licenseConfig.getLicensePath()));
+        File keyLicense = new File(licenseConfig.getLicensePath());
+        if(!keyLicense.exists()) {
+            throw new NoLicenseInstalledException(getLicenseParam().getSubject() + "-证书不存在，请先上传证书！");
+        }
+
+        byte[] key = FileUtils.readFileToByteArray(keyLicense);
 
         if (null == key){
-            throw new NoLicenseInstalledException(getLicenseParam().getSubject());
+            throw new NoLicenseInstalledException(getLicenseParam().getSubject() + "-License获取失败！");
         }
         certificate = getPrivacyGuard().key2cert(key);
         notary.verify(certificate);
