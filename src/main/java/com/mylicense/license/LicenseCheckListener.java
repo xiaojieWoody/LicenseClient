@@ -2,6 +2,7 @@ package com.mylicense.license;
 
 import com.mylicense.config.LicenseConfig;
 import com.mylicense.license.param.LicenseVerifyParam;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
     @Autowired
     private LicenseVerify licenseVerify;
 
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         //root application context 没有parent

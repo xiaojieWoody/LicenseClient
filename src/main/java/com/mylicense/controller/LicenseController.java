@@ -37,7 +37,7 @@ public class LicenseController {
      */
     @ResponseBody
     @PostMapping("/import")
-    public String importLicense(MultipartFile file) throws IOException {
+    public String importLicense(MultipartFile file) throws Exception {
         return licenseService.importLicense2Resource(file);
     }
 

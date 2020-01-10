@@ -11,12 +11,14 @@ import com.mylicense.license.machine.WindowsMachineInfo;
 import com.mylicense.license.model.LicenseCheckModel;
 import com.mylicense.license.param.LicenseVerifyParam;
 import com.mylicense.service.ILicenseService;
+import com.mylicense.service.machine.IMachineInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +34,9 @@ public class LicenseService implements ILicenseService {
     @Autowired
     private LicenseVerify licenseVerify;
 
+    @Autowired
+    private IMachineInfoService machineInfoService;
+
     /**
      * 获取服务器硬件信息
      * @return
@@ -40,23 +45,26 @@ public class LicenseService implements ILicenseService {
     @Override
     public ResMsg getMachineCode() throws Exception {
 
-        String osName = System.getProperty("os.name").toLowerCase();
+        // 调用第三方jar包
+        return machineInfoService.getMachineCode();
 
-        AbstractMachineInfo abstractMachineInfo = null;
-        if (osName.startsWith("windows")) {
-            abstractMachineInfo = new WindowsMachineInfo();
-        } else {
-            abstractMachineInfo = new LinuxMachineInfo();
-        }
-        LicenseCheckModel machineInfo = abstractMachineInfo.getMachineInfo();
-
-        // 转Base64
-        String encoderMsg = Base64.getUrlEncoder().encodeToString(JSON.toJSONBytes(machineInfo));
-        return new ResMsg(200, "success", "", encoderMsg);
+//        String osName = System.getProperty("os.name").toLowerCase();
+//
+//        AbstractMachineInfo abstractMachineInfo = null;
+//        if (osName.startsWith("windows")) {
+//            abstractMachineInfo = new WindowsMachineInfo();
+//        } else {
+//            abstractMachineInfo = new LinuxMachineInfo();
+//        }
+//        LicenseCheckModel machineInfo = abstractMachineInfo.getMachineInfo();
+//
+//        // 转Base64
+//        String encoderMsg = Base64.getUrlEncoder().encodeToString(JSON.toJSONBytes(machineInfo));
+//        return new ResMsg(200, "success", "", encoderMsg);
     }
 
     @Override
-    public String importLicense2Resource(MultipartFile file) throws IOException {
+    public String importLicense2Resource(MultipartFile file) throws Exception {
         // 上传文件到Resource
         String filename = file.getOriginalFilename();
         log.info("filename-{}", filename);

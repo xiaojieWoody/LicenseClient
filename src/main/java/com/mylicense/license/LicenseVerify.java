@@ -5,9 +5,11 @@ import com.mylicense.config.LicenseConfig;
 import com.mylicense.config.LicenseManagerHolder;
 import com.mylicense.license.param.CustomKeyStoreParam;
 import com.mylicense.license.param.LicenseVerifyParam;
+import com.mylicense.service.license.ILicenseVerifyService;
 import de.schlichtherle.license.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -23,6 +25,8 @@ import java.util.prefs.Preferences;
 @Component
 public class LicenseVerify {
 
+    @Autowired
+    private ILicenseVerifyService licenseVerifyService;
     /**
      * 安装License证书
      */
@@ -45,30 +49,35 @@ public class LicenseVerify {
     /**
      * 校验License证书
      */
-    public boolean verify(){
-        // 单例模式，应用启动安装证书时已经初始化过
-        LicenseVerifyParam param = new LicenseVerifyParam();
+    public boolean verify() throws Exception {
+
         LicenseConfig licenseConfig = SpringContextUtils.getBeanByClass(LicenseConfig.class);
-        BeanUtils.copyProperties(licenseConfig, param);
-        URL publickeyResource = LicenseCheckListener.class.getClassLoader().getResource(licenseConfig.getPublicKeysStorePath());
-        if(publickeyResource != null) {
-            param.setPublicKeysStorePath(publickeyResource.getPath());
-        } else {
-            log.error("请先添加授权公钥！");
-            throw new RuntimeException("请先添加授权公钥！");
-        }
-//        LicenseManager licenseManager = new CustomLicenseManager(initLicenseParam(param));
-        LicenseManager licenseManager = LicenseManagerHolder.getInstance(initLicenseParam(param));
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //校验证书
-        try {
-            LicenseContent licenseContent = licenseManager.verify();
-            log.info(MessageFormat.format("证书校验通过，证书有效期：{0} - {1}",format.format(licenseContent.getNotBefore()),format.format(licenseContent.getNotAfter())));
-            return true;
-        }catch (Exception e){
-            log.error("证书校验失败！",e);
-            return false;
-        }
+        // 调用第三方jar
+        return licenseVerifyService.verify(licenseConfig.getLicensePath());
+
+//        // 单例模式，应用启动安装证书时已经初始化过
+//        LicenseVerifyParam param = new LicenseVerifyParam();
+//        LicenseConfig licenseConfig = SpringContextUtils.getBeanByClass(LicenseConfig.class);
+//        BeanUtils.copyProperties(licenseConfig, param);
+//        URL publickeyResource = LicenseCheckListener.class.getClassLoader().getResource(licenseConfig.getPublicKeysStorePath());
+//        if(publickeyResource != null) {
+//            param.setPublicKeysStorePath(publickeyResource.getPath());
+//        } else {
+//            log.error("请先添加授权公钥！");
+//            throw new RuntimeException("请先添加授权公钥！");
+//        }
+////        LicenseManager licenseManager = new CustomLicenseManager(initLicenseParam(param));
+//        LicenseManager licenseManager = LicenseManagerHolder.getInstance(initLicenseParam(param));
+//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        //校验证书
+//        try {
+//            LicenseContent licenseContent = licenseManager.verify();
+//            log.info(MessageFormat.format("证书校验通过，证书有效期：{0} - {1}",format.format(licenseContent.getNotBefore()),format.format(licenseContent.getNotAfter())));
+//            return true;
+//        }catch (Exception e){
+//            log.error("证书校验失败！",e);
+//            return false;
+//        }
     }
 
     /**

@@ -19,5 +19,5 @@ public interface ILicenseService {
      * @return
      * @throws IOException
      */
-    String importLicense2Resource(MultipartFile file) throws IOException;
+    String importLicense2Resource(MultipartFile file) throws Exception;
 }
