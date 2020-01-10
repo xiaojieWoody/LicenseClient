@@ -81,7 +81,8 @@ public class LicenseService implements ILicenseService {
         }
 
         //安装证书
-        licenseVerify.install(param);
+//        licenseVerify.install(param);
+        licenseVerify.verify();
 
         log.info("++++++++ 证书安装结束 ++++++++");
 

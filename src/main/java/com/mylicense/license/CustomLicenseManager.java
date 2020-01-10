@@ -1,6 +1,8 @@
 package com.mylicense.license;
 
 import com.alibaba.fastjson.JSON;
+import com.mylicense.common.SpringContextUtils;
+import com.mylicense.config.LicenseConfig;
 import com.mylicense.license.machine.AbstractMachineInfo;
 import com.mylicense.license.machine.LinuxMachineInfo;
 import com.mylicense.license.machine.WindowsMachineInfo;
@@ -8,13 +10,14 @@ import com.mylicense.license.model.LicenseCheckModel;
 import de.schlichtherle.license.*;
 import de.schlichtherle.xml.GenericCertificate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,21 +37,6 @@ public class CustomLicenseManager extends LicenseManager {
     public CustomLicenseManager(LicenseParam param) {
         super(param);
     }
-
-    /**
-     * 重写create方法
-     * @param content
-     * @param notary
-     * @return
-     * @throws Exception
-     */
-//    @Override
-//    protected synchronized byte[] create(LicenseContent content, LicenseNotary notary) throws Exception {
-//        initialize(content);
-//        this.validateCreate(content);
-//        final GenericCertificate certificate = notary.sign(content);
-//        return getPrivacyGuard().cert2key(certificate);
-//    }
 
     /**
      * 重写install方法
@@ -81,7 +69,12 @@ public class CustomLicenseManager extends LicenseManager {
     protected synchronized LicenseContent verify(final LicenseNotary notary) throws Exception {
         GenericCertificate certificate = getCertificate();
         // Load license key from preferences,
-        final byte[] key = getLicenseKey();
+//        final byte[] key = getLicenseKey();
+
+        // License证书
+        LicenseConfig licenseConfig = SpringContextUtils.getBeanByClass(LicenseConfig.class);
+        byte[] key = FileUtils.readFileToByteArray(new File(licenseConfig.getLicensePath()));
+
         if (null == key){
             throw new NoLicenseInstalledException(getLicenseParam().getSubject());
         }
@@ -185,28 +178,6 @@ public class CustomLicenseManager extends LicenseManager {
         }
         return null;
     }
-
-    /**
-     * 校验生成证书的参数信息
-     * @param content
-     * @throws LicenseContentException
-     */
-//    protected synchronized void validateCreate(final LicenseContent content) throws LicenseContentException {
-//        final LicenseParam param = getLicenseParam();
-//        final Date now = new Date();
-//        final Date notBefore = content.getNotBefore();
-//        final Date notAfter = content.getNotAfter();
-//        if (null != notAfter && now.after(notAfter)){
-//            throw new LicenseContentException("证书失效时间不能早于当前时间");
-//        }
-//        if (null != notBefore && null != notAfter && notAfter.before(notBefore)){
-//            throw new LicenseContentException("证书生效时间不能晚于证书失效时间");
-//        }
-//        final String consumerType = content.getConsumerType();
-//        if (null == consumerType){
-//            throw new LicenseContentException("用户类型不能为空");
-//        }
-//    }
 
     /**
      * 校验当前服务器的IP/Mac地址是否在可被允许的IP范围内
