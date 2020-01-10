@@ -2,6 +2,7 @@ package com.mylicense.config;
 
 import com.alibaba.fastjson.JSON;
 import com.mylicense.common.ResMsg;
+import com.mylicense.common.SpringContextUtils;
 import com.mylicense.license.LicenseVerify;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -15,7 +16,8 @@ public class LicenseCheckInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        LicenseVerify licenseVerify = new LicenseVerify();
+//        LicenseVerify licenseVerify = new LicenseVerify();
+        LicenseVerify licenseVerify = SpringContextUtils.getBeanByClass(LicenseVerify.class);
 
         boolean verifyResult = false;
         try {
